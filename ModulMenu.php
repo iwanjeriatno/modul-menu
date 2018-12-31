@@ -15,39 +15,51 @@ class ModulMenu
     {
         return DB::table('app_modul')
                     ->where('modul_cat_id', $cat)
-                    ->orderBy('order','asc')
+                    ->orderBy('no','asc')
                     ->get();
     }
 
     public static function modules()
     {
         return DB::table('app_modul')
-                    ->orderBy('app_modul.order','asc')
+                    ->orderBy('app_modul.no','asc')
                     ->get();
     }
     public static function menu($mod)
     {
         return DB::table('app_menu')
-                    ->where('modul_id', $mod)
-                    ->orderBy('order','asc')
+                    ->leftjoin('app_modul','app_modul.id','app_menu.modul_id')
+                    ->where('app_menu.modul_id', $mod)
+                    ->where('app_modul.sheet', 0)
+                    ->orderBy('app_menu.no','asc')
                     ->get();
     }
     public static function submenu($menu)
     {
         return DB::table('app_submenu')
                     ->where('menu_id', $menu)
-                    ->orderBy('order','asc')
+                    ->orderBy('no','asc')
                     ->get();
     }
 
     // exists
     public static function isMenu($mod)
     {
-        return DB::table('app_menu')->where('modul_id', $mod)->exists();
+        return DB::table('app_menu')
+                ->leftjoin('app_modul','app_modul.id','app_menu.modul_id')
+                ->where('app_menu.modul_id', $mod)
+                ->where('app_modul.sheet', 0)
+                ->exists();
     }
     public static function isSubmenu($men)
     {
         return DB::table('app_submenu')->where('menu_id', $men)->exists();
+    }
+
+    // label
+    public static function isLabel($mod)
+    {
+        return DB::table('app_modul')->where('label', $mod)->first();
     }
 
     // count
@@ -94,7 +106,7 @@ class ModulMenu
         // ----------------------------
         $kategori = DB::table('app_modul_category')
                          // ->whereIn('id', $mod_id)
-                         ->orderBy('order', 'asc')
+                         ->orderBy('no', 'asc')
                          ->get();
 
         // ====================================
@@ -135,7 +147,7 @@ class ModulMenu
         // ----------------------------
         $modul = DB::table('setting_modul')
                          ->whereIn('id', $mod_id)
-                         ->orderBy('order', 'asc')
+                         ->orderBy('no', 'asc')
                          ->get();
 
         // ====================================
