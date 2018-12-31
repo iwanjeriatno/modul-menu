@@ -28,9 +28,19 @@ class ModulMenu
     public static function menu($mod)
     {
         return DB::table('app_menu')
+                    ->select('app_menu.*')
                     ->leftjoin('app_modul','app_modul.id','app_menu.modul_id')
                     ->where('app_menu.modul_id', $mod)
                     ->where('app_modul.sheet', 0)
+                    ->orderBy('app_menu.no','asc')
+                    ->get();
+    }
+    public static function menuSheet($mod)
+    {
+        return DB::table('app_menu')
+                    ->select('app_menu.*')
+                    ->leftjoin('app_modul','app_modul.id','app_menu.modul_id')
+                    ->where('app_menu.modul_id', $mod)
                     ->orderBy('app_menu.no','asc')
                     ->get();
     }
