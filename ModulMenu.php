@@ -59,7 +59,7 @@ class ModulMenu
     // label
     public static function isLabel($mod)
     {
-        return DB::table('app_modul')->where('label', $mod)->first();
+        return DB::table('app_modul')->where('link', $mod)->first();
     }
 
     // count
